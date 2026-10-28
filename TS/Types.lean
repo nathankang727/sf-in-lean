@@ -1406,6 +1406,9 @@ All three remain true.
 
 # Additional Exercises
 
+:::suppressPreviousHeaderWhenTerse
+:::
+
 ::::::full
 :::::exercise (rating := 3) (name := "subject_expansion")
 Having seen the subject reduction property, one might wonder whether the
@@ -1442,10 +1445,12 @@ end TM
 
 ::::::
 
+::::full
 The following are _thought exercises_: for each modification, say which
 of determinism / progress / preservation still hold, with a
 counterexample if one breaks.  (These are graded manually; there is no
 Lean code to complete.)
+::::
 
 :::dev
 ```
