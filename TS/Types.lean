@@ -670,11 +670,9 @@ _function_ for it.
 ::::
 
 :::dev "mwhicks1"
-```
 In the Rocq source these were a hidden, never-uncommented draft
 (with `eval` still to be renamed to `step`).  Here they are activated as
 live Lean. Not sure if we want to keep this.
-```
 :::
 
 Suppose we define an alternate single-step relation, written `t ⇢ t'`,
@@ -978,7 +976,7 @@ example (t : Tm) (h : <{ ⊢ succ t ⦂ Nat }>) : <{ ⊢ t ⦂ Nat }> := by
 
 ::::::
 
-## Canonical forms
+## Canonical Forms
 
 The following two lemmas capture the fundamental fact that the
 definitions of boolean and numeric values agree with the typing relation:
@@ -1125,9 +1123,9 @@ _Proof_: By induction on a derivation of `⊢ t ⦂ T`.
   `⊢ t₁ ⦂ Nat`.  By the IH, either `t₁` is a value or else `t₁` can step
   to some `t₁'`.
 
-  - If `t₁` is a value, then by the canonical forms lemma `t₁` is an
-    `nvalue`, and hence `t` is also an `nvalue` (and hence a value) by
-    `succ`.
+  - If `t₁` is a value, then by the canonical forms lemma `t₁` is a
+    numeric value (`Tm.IsNValue`), and hence `t` is also a numeric
+    value (and hence a value) by `succ`.
 
   - If `t₁` can take a step, then by `succStep`, so can `t`.
 
@@ -1136,13 +1134,14 @@ _Proof_: By induction on a derivation of `⊢ t ⦂ T`.
   to some `t₁'`.
 
   - If `t₁` is a value, then (by the same argument as in the previous
-    case) it must be an `nvalue`.  By case analysis on the `nvalue`
-    judgement, there are two cases:
+    case) it must be a numeric value (`Tm.IsNValue`).  By case
+    analysis on the `Tm.IsNValue` judgment, there are two cases:
 
     - If `t₁ = 0`, then `t` can take a step by `predZero`.
 
-    - Otherwise, `t₁ = succ t₁'`, with `t₁'` an `nvalue`.  Hence `t` can
-      again take a step, this time by `predSucc`.
+    - Otherwise, `t₁ = succ t₁'`, with `t₁'` a numeric value
+      (`Tm.IsNValue`).  Hence `t` can again take a step, this time by
+      `predSucc`.
 
   - Finally, if `t₁` can take a step, then by `predStep`, so can `t`.
 
@@ -1150,13 +1149,13 @@ _Proof_: By induction on a derivation of `⊢ t ⦂ T`.
   with `⊢ t₁ ⦂ Nat`.  By the IH, either `t₁` is a value or else `t₁` steps
   to some `t₁'`.
 
-  - If `t₁` is a value, it must be an `nvalue`, and there are two cases to
-    consider:
+  - If `t₁` is a value, it must be a numeric value (`Tm.IsNValue`), and
+    there are two cases to consider:
 
     - If `t₁ = 0`, then `t` can take a step by `isZeroZero`.
 
-    - Otherwise, `t₁ = succ t₁'` where `t₁'` is an `nvalue`.  Hence `t` can
-      take a step by `isZeroSucc`.
+    - Otherwise, `t₁ = succ t₁'` where `t₁'` is a numeric value
+      (`Tm.IsNValue`).  Hence `t` can take a step by `isZeroSucc`.
 
   - If `t₁` can take a step, then so can `t`, by `isZeroStep`.
 ```
@@ -1703,13 +1702,6 @@ reason that language theorists generally prefer the small-step style.
 ```
 :::
 
-:::dev "Benjamin Pierce (bcpierce00)"
-This next is not using the new conventions for `grade` blocks, which I thought
-`to_verso.py` was now enforcing.  Is that because this file was converted a while back,
-before these improvements?  (I suspect yes because the indentation is also
-wonky and I improved that too.) Anyway, the `grade` block headers should be fixed, throughout (and maybe in Smallstep and Imp?)... `dev` block headers too, if we want
-to be really consistent.
-:::
 :::grade
 ```
 GRADE_MANUAL 6: prog_pres_bigstep
