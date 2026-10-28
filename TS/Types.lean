@@ -456,9 +456,10 @@ theorem nvalue_is_nf (t : Tm)
   | succ t₀ hn₀ ih =>
       intro hc; obtain ⟨t', hstp⟩ := hc
       inversion hstp with
-      | succStep t₁' h => exact ih ⟨t₁', h⟩
+      | succStep t₁' h => apply ih; exists t₁'
 ```
 
+::::::full
 :::::exercise (rating := 3) (name := "value_is_nf") (checkVisibility := false)
 (Hint: You will reach a point in this proof where you need to use an
 induction to reason about a term that is known to be a numeric value.
@@ -519,6 +520,7 @@ theorem value_is_nf' (t : Tm)
 :::gradeTheorem 3 value_is_nf
 :::
 :::::
+::::::
 
 ::::::full
 :::::exercise (rating := 3) (name := "step_deterministic") (optional := true)
@@ -694,21 +696,31 @@ scoped notation:40 t:41 " ⇢ " t':41 => Tm.AltStep t t'
 
 Some questions about this relation (answers inline):
 
-  - Is `⇢` deterministic (`∀ t t' t'', t ⇢ t' → t ⇢ t'' → t' = t''`)?  No:
+  - Is `⇢` deterministic (`∀ t t' t'', t ⇢ t' → t ⇢ t'' → t' = t''`)?
+
+    No:
     `pred (succ (pred 0))` steps to both `pred 0` (by `predSucc`) and
     `pred (succ 0)` (by `predStep`, since `pred 0 ⇢ 0`).
 
-  - Is every `Tm.Step` normal form also a `⇢` normal form?  No:
+  - Is every `Tm.Step` normal form also a `⇢` normal form?
+
+    No:
     `pred (succ true)` is stuck for `Tm.Step` but steps under `⇢` (to
     `true`, by `predSucc`, now that the `Tm.IsNValue` premise is gone).
 
-  - Is every `⇢` normal form also a `Tm.Step` normal form?  Yes — `Tm.Step`
+  - Is every `⇢` normal form also a `Tm.Step` normal form?
+
+    Yes — `Tm.Step`
     is a subrelation of `⇢`, so anything stuck for `⇢` is stuck for `Tm.Step`.
 
   - Is every value reachable by `Tm.Step` (in many steps) also reachable by
-    `⇢` (in many steps)?  Yes, for the same subrelation reason.
+    `⇢` (in many steps)?
 
-  - Conversely?  No: `iszero (succ true)` reaches the value `false` under
+    Yes, for the same subrelation reason.
+
+  - Conversely?
+
+    No: `iszero (succ true)` reaches the value `false` under
     `⇢` but is stuck under `Tm.Step`.
 
 A _functional_ version computes a single `⇢` step of a term, returning
@@ -871,7 +883,8 @@ inductive Tm.HasType : Tm → Ty → Prop where
   | tru : <{ ⊢ true ⦂ Bool }>
   | fls : <{ ⊢ false ⦂ Bool }>
   | ite {t₁ t₂ t₃ : Tm} {τ : Ty}
-      (h₁ : <{ ⊢ t₁ ⦂ Bool }>) (h₂ : <{ ⊢ t₂ ⦂ τ }>)
+      (h₁ : <{ ⊢ t₁ ⦂ Bool }>)
+      (h₂ : <{ ⊢ t₂ ⦂ τ }>)
       (h₃ : <{ ⊢ t₃ ⦂ τ }>) :
       <{ ⊢ if t₁ then t₂ else t₃ ⦂ τ }>
   | zero : <{ ⊢ 0 ⦂ Nat }>
@@ -984,9 +997,12 @@ if a term is well typed, then either it is a value or it can take at
 least one step.  We call this _progress_.
 
 :::::exercise (rating := 3) (name := "finish_progress") (checkVisibility := false)
+
+:::full
 Complete the formal proof of the `progress` property.  (Make sure you
 understand the parts we've given of the informal proof in the following
 exercise before starting — this will save you a lot of time.)
+:::
 
 ```lean
 theorem progress (t : Tm) (τ : Ty) (hT : <{ ⊢ t ⦂ τ }>) :
@@ -1193,9 +1209,12 @@ The second critical property of typing is that, when a well-typed term
 takes a step, the result is a well-typed term (of the same type).
 
 :::::exercise (rating := 2) (name := "finish_preservation") (checkVisibility := false)
+
+:::full
 Complete the formal proof of the `preservation` property.  (Again, make
 sure you understand the informal proof fragment in the following exercise
 first.)
+:::
 
 ```lean
 theorem preservation (t t' : Tm) (τ : Ty) (hT : <{ ⊢ t ⦂ τ }>)
